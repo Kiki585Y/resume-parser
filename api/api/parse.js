@@ -13,13 +13,15 @@ export default async function handler(req, res) {
       method: 'POST',
       headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'doubao-pro-4k',
+        model: 'ep-20261021205137-wfrnk',
         messages: [{role:'user', content: prompt}],
-        temperature: 0.1,
-        tools: [{type:"web_search"}]
+        temperature: 0.1
       })
     });
     const result = await resp.json();
+    if(!result.choices){
+      return res.status(500).json({error:'豆包接口返回错误: '+JSON.stringify(result)});
+    }
     const content = result.choices[0].message.content;
     const start = content.indexOf('{');
     const end = content.lastIndexOf('}') + 1;
